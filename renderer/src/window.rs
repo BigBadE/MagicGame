@@ -12,7 +12,7 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn start<T: 'static>(mut context: T, callback: fn(&mut T, &mut Window)) -> ! {
+    pub fn start<T: 'static>(mut context: fn(&Window) -> T, callback: fn(&mut T, &mut Window)) -> ! {
         let event_loop = glutin::event_loop::EventLoop::new();
         let wb = glutin::window::WindowBuilder::new();
         let cb = glutin::ContextBuilder::new();
@@ -25,6 +25,7 @@ impl Window {
             mouse_input: Vec::new()
         };
 
+        let mut context = context(&window);
         let next_frame_time = std::time::Instant::now() +
             std::time::Duration::from_nanos(16_666_667);
 

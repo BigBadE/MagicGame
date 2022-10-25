@@ -1,3 +1,4 @@
+use anyhow::Error;
 use renderer::util::Vertex;
 use renderer::window::Window;
 use crate::game::game::Game;
@@ -9,18 +10,27 @@ mod game;
 mod world;
 mod physics;
 mod util;
+mod shaders;
 
 fn main() {
+    Window::start(setup, game_loop);
+}
+
+fn setup(window: &Window) -> Game {
     let random = Random::new(1);
-    Window::start(Game::new(random), game_loop);
+    return Game::new(random, window);
 }
 
 fn game_loop(game: &mut Game, window: &mut Window) {
     let mut frame = window.display.start_frame();
     frame.clear();
 
-    let background = vec![Vertex { position: [-1.0, -1.0] }, Vertex { position: [1.0, -1.0] },
-                          Vertex { position: [1.0, 1.0] }, Vertex { position: [-1.0, 1.0] }];
+    let background = vec![
+        Vertex { position: [-1.0, -1.0] }, Vertex { position: [1.0, -1.0] }, Vertex { position: [-1.0, 1.0] },
+        Vertex { position: [1.0, 1.0] }];
+    let indices = [0, 1, 2, 2, 3, 1];
+    frame.draw(&window.display, &background, &indices, &game.shaders.get_shader("standard"));
+
     Physics::physics_tick(game);
 
     while !window.mouse_input.is_empty() {
