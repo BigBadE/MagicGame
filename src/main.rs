@@ -1,10 +1,11 @@
-use anyhow::Error;
 use renderer::util::Vertex;
 use renderer::window::Window;
 use core::game::game::Game;
 use core::physics::physics::Physics;
 use core::util::random::Random;
 use core::world::pixel::PixelType;
+
+const JSON: &str = include_str!("../target/output.json");
 
 fn main() {
     Window::start(setup, game_loop);
