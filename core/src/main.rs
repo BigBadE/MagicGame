@@ -26,10 +26,11 @@ fn game_loop(game: &mut Game, window: &mut Window) {
     frame.clear();
 
     let background = vec![
-        Vertex { position: [-1.0, -1.0] }, Vertex { position: [1.0, -1.0] }, Vertex { position: [-1.0, 1.0] },
-        Vertex { position: [1.0, 1.0] }];
+        Vertex::new_coord([-1.0, -1.0], [0.0, 0.0]), Vertex::new_coord([1.0, -1.0], [1.0, 0.0]),
+        Vertex::new_coord([-1.0, 1.0], [0.0, 1.0]), Vertex::new_coord([1.0, 1.0], [1.0, 1.0])];
     let indices = [0, 1, 2, 2, 3, 1];
-    frame.draw(&window.display, &background, &indices, &game.shaders.get_shader("standard"));
+    frame.draw(&window.display, &background, &indices,
+               &game.shaders.get_shader("standard"), Vec::new());
 
     Physics::physics_tick(game);
 
