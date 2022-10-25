@@ -3,11 +3,10 @@ use glium::glutin::event::{Event, WindowEvent};
 use glium::glutin::event_loop::ControlFlow;
 use crate::display::GameDisplay;
 use crate::input::{KeyInput, MouseInput};
-use crate::util::Vector;
 
 pub struct Window {
     pub display: GameDisplay,
-    pub cursor: Vector,
+    pub cursor: (f64, f64),
     pub key_presses: Vec<KeyInput>,
     pub mouse_input: Vec<MouseInput>
 }
@@ -21,7 +20,7 @@ impl Window {
 
         let mut window = Window {
             display: GameDisplay::new(display),
-            cursor: Vector { position: [0.0; 2]},
+            cursor: (0.0, 0.0),
             key_presses: Vec::new(),
             mouse_input: Vec::new()
         };
@@ -46,7 +45,7 @@ impl Window {
                         window.mouse_input.push(MouseInput::new(button))
                     }
                     glutin::event::WindowEvent::CursorMoved { position, .. } => {
-                        window.cursor = Vector { position: [position.x as f32, position.y as f32] };
+                        window.cursor = (position.x, position.y);
                     }
                     _ => return,
                 },

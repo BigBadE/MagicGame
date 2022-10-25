@@ -1,12 +1,10 @@
 use std::cell::RefCell;
 use std::collections::HashMap;
-use std::rc::Rc;
-use renderer::util::VectorInt;
 use crate::util::random::Random;
 use crate::world::chunk::Chunk;
 
 pub struct World {
-    pub chunks: HashMap<VectorInt, RefCell<Chunk>>,
+    pub chunks: HashMap<(i32, i32), RefCell<Chunk>>,
     random: Random
 }
 
@@ -22,7 +20,7 @@ impl World {
         todo!()
     }
 
-    pub fn get_chunk(&mut self, position: VectorInt) -> &RefCell<Chunk> {
+    pub fn get_chunk(&mut self, position: (i32, i32)) -> &RefCell<Chunk> {
         if self.chunks.contains_key(&position) {
             return self.chunks.get(&position).expect("Couldn't find chunk!");
         }
