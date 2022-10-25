@@ -1,16 +1,10 @@
 use anyhow::Error;
 use renderer::util::Vertex;
 use renderer::window::Window;
-use crate::game::game::Game;
-use crate::physics::physics::Physics;
-use crate::util::random::Random;
-use crate::world::pixel::PixelType;
-
-mod game;
-mod world;
-mod physics;
-mod util;
-mod shaders;
+use core::game::game::Game;
+use core::physics::physics::Physics;
+use core::util::random::Random;
+use core::world::pixel::PixelType;
 
 fn main() {
     Window::start(setup, game_loop);

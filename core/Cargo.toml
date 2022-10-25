@@ -3,10 +3,7 @@ name = "core"
 version = "0.1.0"
 edition = "2021"
 
-[[bin]]
-name = "MagicGame"
-path = "src/main.rs"
-
 [dependencies]
 renderer = { version = "0.1.0", path = "../renderer"}
 anyhow = "1.0.66"
+

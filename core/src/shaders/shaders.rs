@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use renderer::display::{GameDisplay, Shader};
 
 pub struct ShaderDatabase {
-    shaders: HashMap<&'static str, Shader>
+    shaders: HashMap<&'static str, Shader>,
 }
 
 impl ShaderDatabase {
@@ -12,7 +12,8 @@ impl ShaderDatabase {
         };
 
         shaders.try_add_shader(&display, "standard",
-                               include_str!("standard.vert"), include_str!("standard.frag"));
+                               include_str!("../../../resources/shaders/standard.vert"),
+                               include_str!("../../../resources/shaders/standard.frag"));
 
         return shaders;
     }
@@ -23,7 +24,7 @@ impl ShaderDatabase {
             Err(error) => {
                 println!("Error compiling shader:\n{}", error);
                 Option::None
-            },
+            }
         };
     }
 
