@@ -2,6 +2,9 @@ use macros::JsonResource;
 use json::JsonValue;
 use crate::resources::resources::JsonResource;
 
+const RAND_SEED_BITS: u8 = 0xC0;
+const PIXEL_TYPE_BITS: u8 = 0x3F;
+
 #[derive(Copy, Clone)]
 pub struct Pixel {
     //6 bits of id + 2 bits of random seed
@@ -33,25 +36,25 @@ pub struct PixelType {
 impl JsonResource for PixelType {}
 
 impl PixelType {
-    pub fn new(value: &JsonValue, index: u32) -> Self {
+    pub fn new(value: &JsonValue, index: usize) -> Self {
         let temp = PixelType {
             flags: index as u8
         };
 
-        __load(&temp, value);
-
-        if temp.flags > 0xC0 {
-            panic!("Pixel with flags over 0xC0, too many.");
+        if temp.flags & RAND_SEED_BITS != 0 {
+            panic!("Pixel over {}, too many pixels registered.", RAND_SEED_BITS);
         }
+
+        __load(&temp, value);
 
         return temp;
     }
 
     pub fn set_type(&self, flags: u8) -> u8 {
-        return flags & 0xC0 + self.flags;
+        return flags & RAND_SEED_BITS + self.flags;
     }
 
     pub fn is_type(&self, flags: u8) -> bool {
-        return flags & 0x3F == self.flags;
+        return flags & PIXEL_TYPE_BITS == self.flags;
     }
 }

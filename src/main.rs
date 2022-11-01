@@ -5,8 +5,6 @@ use core::physics::physics::Physics;
 use core::util::random::Random;
 use core::world::pixel::PixelType;
 
-const JSON: &str = include_str!("../target/output.json");
-
 fn main() {
     Window::start(setup, game_loop);
 }
@@ -32,7 +30,8 @@ fn game_loop(game: &mut Game, window: &mut Window) {
     while !window.mouse_input.is_empty() {
         let position = window.cursor;
         let clicking = game.world.get_chunk((position.0 as i32 >> 9, position.1 as i32 >> 9));
-        clicking.borrow_mut().set_pixel_type(position.0 as usize % 512, position.1 as usize % 512, PixelType::SAND);
+        clicking.borrow_mut().set_pixel_type(position.0 as usize % 512, position.1 as usize % 512,
+                                             game.resource_manager);
         window.mouse_input.remove(0);
     }
     frame.end_frame();
