@@ -5,12 +5,11 @@ use syn::{DeriveInput, Ident, parse_macro_input, PathSegment, Type};
 use syn::punctuated::Punctuated;
 use syn::token::Colon2;
 
-#[proc_macro_derive(JsonResource, attributes(ignore, require))]
+#[proc_macro_derive(JsonResource, attributes(ignore_field, require_field))]
 pub fn json_implement(item: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(item as DeriveInput);
-    let struct_name = &ast.ident;
-
-    let mut output = String::from(format!("pub fn __load(input: &{struct_name}, value: JsonValue) {{"));
+    let mut output = String::from(
+        format!("pub fn __load(input: &{}, value: &JsonValue) {{", ast.ident));
 
     let fields =
         if let syn::Data::Struct(
@@ -26,14 +25,14 @@ pub fn json_implement(item: TokenStream) -> TokenStream {
 
     for field in fields.named.iter() {
         match &field.ty {
-            Type::Path(TypePath) => {
-                let segments = &TypePath.path.segments;
+            Type::Path(type_path) => {
+                let segments = &type_path.path.segments;
                 let mut ignore = false;
                 let mut required = false;
                 for attribute in &field.attrs {
                     match combine(&attribute.path.segments).as_str() {
-                        "ignore" => ignore = true,
-                        "required" => required = true,
+                        "ignore_field" => ignore = true,
+                        "require_field" => required = true,
                         _ => {}
                     }
                 }

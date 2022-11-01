@@ -1,4 +1,4 @@
-use macros::{json_implement, JsonResource};
+use macros::JsonResource;
 use json::JsonValue;
 use crate::resources::resources::JsonResource;
 
@@ -26,17 +26,24 @@ impl Pixel {
 
 #[derive(JsonResource)]
 pub struct PixelType {
-    #[require]
+    #[ignore_field]
     pub flags: u8,
 }
 
+impl JsonResource for PixelType {}
+
 impl PixelType {
-    pub fn new(value: JsonValue) -> Self {
+    pub fn new(value: &JsonValue, index: u32) -> Self {
         let temp = PixelType {
-            flags: 0
+            flags: index as u8
         };
 
         __load(&temp, value);
+
+        if temp.flags > 0xC0 {
+            panic!("Pixel with flags over 0xC0, too many.");
+        }
+
         return temp;
     }
 
