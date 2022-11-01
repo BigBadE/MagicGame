@@ -39,6 +39,10 @@ impl ResourceManager {
         };
     }
 
+    pub fn get_type(&self, resource_type: &str, name: &str) -> &dyn JsonResource {
+        return &*self.resources[resource_type][name] as &dyn JsonResource;
+    }
+
     fn create_type(value_type: &str, values: &JsonValue, index: usize) -> Box<dyn JsonResource> {
         match value_type {
             "PixelType" => Box::new(PixelType::new(values, index)),
