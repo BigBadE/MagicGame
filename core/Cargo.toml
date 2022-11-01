@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-renderer = { version = "0.1.0", path = "../renderer"}
+renderer = { version = "0.1.0", path = "../renderer" }
+macros = { version = "0.1.0", path = "../macros" }
 anyhow = "1.0.66"
 json = "0.12.4"

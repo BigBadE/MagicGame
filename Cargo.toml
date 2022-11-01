@@ -11,7 +11,8 @@ path = "src/main.rs"
 [workspace]
 members = [
     "renderer",
-    "core"
+    "core",
+    "macros"
 ]
 
 [dependencies]
