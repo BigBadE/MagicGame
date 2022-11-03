@@ -9,7 +9,7 @@ use syn::token::Colon2;
 pub fn json_implement(item: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(item as DeriveInput);
     let mut output = String::from(
-        format!("pub fn __load(input: &{}, value: &JsonValue) {{", ast.ident));
+        format!("pub fn __load_{}(input: &mut {}, value: &JsonValue) {{", ast.ident, ast.ident));
 
     let fields =
         if let syn::Data::Struct(
@@ -40,12 +40,12 @@ pub fn json_implement(item: TokenStream) -> TokenStream {
                 if !ignore {
                     let field_name = field.ident.as_ref().unwrap().to_string();
 
-                    if required {
+                    if !required {
                         output += format!("if value.has_key(\"{}\") {{", field_name).as_str();
                     }
                     output += load_path(field_name,
                                         combine(segments).as_str()).as_str();
-                    if required {
+                    if !required {
                         output += "}"
                     }
                 }
@@ -70,6 +70,7 @@ fn combine(segments: &Punctuated<PathSegment, Colon2>) -> String {
 fn load_path(field_name: String, found_type: &str) -> String {
     return match found_type {
         "u8" => format!("input.{} = value[\"{}\"].as_u8().expect(\"No field {}\")", field_name, field_name, field_name),
-        _ => panic!("Unknown type {} for field {}", found_type, field_name)
+        "u16" => format!("input.{} = value[\"{}\"].as_u16().expect(\"No field {}\")", field_name, field_name, field_name),
+        _ => format!("input.{} = {}::new(&value[\"{}\"])", field_name, found_type, field_name)
     };
 }

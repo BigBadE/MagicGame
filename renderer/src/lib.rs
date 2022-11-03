@@ -5,3 +5,4 @@ pub mod window;
 pub mod display;
 pub mod util;
 pub mod input;
+pub mod mesh;

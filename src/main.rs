@@ -18,12 +18,9 @@ fn game_loop(game: &mut Game, window: &mut Window) {
     let mut frame = window.display.start_frame();
     frame.clear();
 
-    let background = vec![
-        Vertex::new_coord([-1.0, -1.0], [0.0, 0.0]), Vertex::new_coord([1.0, -1.0], [1.0, 0.0]),
-        Vertex::new_coord([-1.0, 1.0], [0.0, 1.0]), Vertex::new_coord([1.0, 1.0], [1.0, 1.0])];
-    let indices = [0, 1, 2, 2, 3, 1];
-    frame.draw(&window.display, &background, &indices,
-               &game.shaders.get_shader("standard"), Vec::new());
+    for chunk in game.world.chunks.values() {
+        chunk.borrow_mut().mesh.draw(&window.display, &mut frame, &game.shaders.get_shader("standard"));
+    }
 
     Physics::physics_tick(game);
 
@@ -32,7 +29,7 @@ fn game_loop(game: &mut Game, window: &mut Window) {
         let clicking = game.world.get_chunk((position.0 as i32 >> 9, position.1 as i32 >> 9));
         clicking.borrow_mut().set_pixel_type(
             position.0 as usize % 512, position.1 as usize % 512,
-            game.resource_manager.get_type("pixel", "sand") as PixelType);
+            game.resource_manager.get_type("pixel", "sand"));
         window.mouse_input.remove(0);
     }
     frame.end_frame();
