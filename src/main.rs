@@ -1,9 +1,7 @@
-use renderer::util::Vertex;
 use renderer::window::Window;
 use core::game::game::Game;
 use core::physics::physics::Physics;
 use core::util::random::Random;
-use core::world::pixel::PixelType;
 
 fn main() {
     Window::start(setup, game_loop);
@@ -18,11 +16,13 @@ fn game_loop(game: &mut Game, window: &mut Window) {
     let mut frame = window.display.start_frame();
     frame.clear();
 
+    Physics::physics_tick(game);
+
+    game.world.update(&window.display);
+
     for chunk in game.world.chunks.values() {
         chunk.borrow_mut().mesh.draw(&window.display, &mut frame, &game.shaders.get_shader("standard"));
     }
-
-    Physics::physics_tick(game);
 
     while !window.mouse_input.is_empty() {
         let position = window.cursor;

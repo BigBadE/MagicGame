@@ -1,5 +1,6 @@
 use std::cell::RefCell;
 use std::collections::HashMap;
+use renderer::display::GameDisplay;
 use crate::util::random::Random;
 use crate::world::chunk::Chunk;
 
@@ -16,12 +17,18 @@ impl World {
         };
     }
 
-    fn try_unload(&mut self) {
-        todo!();
+    pub fn update(&mut self, display: &GameDisplay) {
+        let size = ((display.size.0 / 512 + 1) as i32, (display.size.1 / 512 + 1) as i32);
+        for x in -size.0..=size.0 {
+            for y in -size.1..=size.1 {
+                if !self.chunks.contains_key(&(x, y)) {
+                    self.load_chunk((x, y));
+                }
+            }
+        }
     }
 
     pub fn load_chunk(&mut self, position: (i32, i32)) {
-        self.try_unload();
         self.chunks.insert(position, RefCell::new(Chunk::new(&mut self.random, position)));
     }
 

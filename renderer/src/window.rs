@@ -1,5 +1,5 @@
 use glium::{Display, glutin};
-use glium::glutin::event::{Event, WindowEvent};
+use glium::glutin::event::Event;
 use glium::glutin::event_loop::ControlFlow;
 use crate::display::GameDisplay;
 use crate::input::{KeyInput, MouseInput};
@@ -12,7 +12,7 @@ pub struct Window {
 }
 
 impl Window {
-    pub fn start<T: 'static>(mut context: fn(&Window) -> T, callback: fn(&mut T, &mut Window)) -> ! {
+    pub fn start<T: 'static>(context: fn(&Window) -> T, callback: fn(&mut T, &mut Window)) -> ! {
         let event_loop = glutin::event_loop::EventLoop::new();
         let wb = glutin::window::WindowBuilder::new();
         let cb = glutin::ContextBuilder::new();
@@ -36,6 +36,9 @@ impl Window {
                     glutin::event::WindowEvent::CloseRequested => {
                         *control_flow = ControlFlow::Exit;
                         return;
+                    }
+                    glutin::event::WindowEvent::Resized(size) => {
+                        window.display.size = (size.width, size.width)
                     }
                     glutin::event::WindowEvent::KeyboardInput { input, is_synthetic, .. } => {
                         if !is_synthetic {

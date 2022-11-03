@@ -1,18 +1,18 @@
 use anyhow::Error;
 use glium::{Display, DrawParameters, Frame, Program, Surface, VertexBuffer};
 use glium::texture::RawImage2d;
-use glium::uniforms::{EmptyUniforms, Uniforms, UniformsStorage};
-use glium::uniforms::UniformValue::SrgbTexture2d;
 use crate::util::Vertex;
 
 pub struct GameDisplay {
-    display: Display
+    display: Display,
+    pub size: (u32, u32)
 }
 
 impl GameDisplay {
     pub fn new(display: Display) -> Self {
         return GameDisplay {
-            display
+            display,
+            size: (0, 0)
         }
     }
 
@@ -35,10 +35,6 @@ pub struct Shader {
     program: Program
 }
 
-pub struct InputUniforms<T> where T : Uniforms {
-    uniform: T
-}
-
 pub struct GameFrame {
     frame: Frame
 }
@@ -55,9 +51,8 @@ impl GameFrame {
     }
 
     pub fn draw(&mut self, display: &GameDisplay, vertexes: &Vec<Vertex>, indices: &[u32],
-                shader: &Shader, image: Vec<u16>) {
-        let dimensions = (image.len() as u32, image.len() as u32);
-        let image = RawImage2d::from_raw_rgb(image, dimensions);
+                shader: &Shader, tex: Vec<u8>, tex_size: (u32, u32)) {
+        let image = RawImage2d::from_raw_rgb(tex, tex_size);
         let texture = glium::texture::SrgbTexture2d::new(&display.display, image).unwrap();
         let uniform = uniform! {
             tex: texture

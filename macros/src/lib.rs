@@ -1,7 +1,7 @@
 extern crate proc_macro;
 
 use proc_macro::TokenStream;
-use syn::{DeriveInput, Ident, parse_macro_input, PathSegment, Type};
+use syn::{DeriveInput, parse_macro_input, PathSegment, Type};
 use syn::punctuated::Punctuated;
 use syn::token::Colon2;
 
