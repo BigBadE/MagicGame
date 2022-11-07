@@ -1,5 +1,4 @@
 use std::fmt::{Display, Formatter};
-use glium::texture::ClientFormat;
 use crate::display::{GameDisplay, GameFrame, Shader};
 use crate::util::Vertex;
 use macros::JsonResource;

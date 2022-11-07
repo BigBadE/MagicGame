@@ -42,13 +42,16 @@ impl Chunk {
                 chunk.internal_set_pixel((position.0 * 512, 511),
                                          self.mesh.get_color(position.0, 0),
                                          self.pixels[position.0 * 512]);
-                self.mesh.set_color(512 - position.0, 0, Color::default());
+                self.mesh.set_color(512 - position.0, 0, Color::from((100, 100, 100)));
                 self.pixels[position.0 * 512] = temp;
             } else {
                 if self.pixels[position.0 * 512 + position.1 - 1].is_air() {
                     self.pixels.swap(position.0 * 512 + position.1 - 1,
                                      position.0 * 512 + position.1);
-                    self.mesh.swap_color((512 - position.0) * 512 + position.1, position.0 * 512 + position.1 - 1);
+                    let color = self.mesh.get_color(position.0, position.1);
+                    self.mesh.set_color((512 - position.0), position.1 - 1,
+                                        color);
+                    self.mesh.set_color((512 - position.0), position.1, Color::from((100, 100, 100)))
                 }
             }
         }
