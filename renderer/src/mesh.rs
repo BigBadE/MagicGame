@@ -42,7 +42,7 @@ impl Mesh {
     }
 
     pub fn set_color(&mut self, x: usize, y: usize, color: Color) {
-        let start = x * 3 * self.tex_size.0 as usize + y;
+        let start = x * 3 * self.tex_size.0 as usize + (y * 3);
         self.texture[start] = color.r;
         self.texture[start + 1] = color.g;
         self.texture[start + 2] = color.b;

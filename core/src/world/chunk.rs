@@ -35,6 +35,11 @@ impl Chunk {
     }
 
     pub fn physics_tick(&mut self, world: &World) {
+        for x in 0..2 {
+            for y in 0..2 {
+                self.mesh.set_color(x, y, Color::from((255, 0, 0)));
+            }
+        }
         for position in self.active.as_slice() {
             if position.1 == 0 {
                 let mut chunk = world.get_chunk((self.position.0, self.position.1)).borrow_mut();
