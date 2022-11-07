@@ -11,9 +11,10 @@ pub struct Chunk {
 }
 
 impl Chunk {
-    pub fn new(random: &mut Random, position: (i32, i32)) -> Self {
+    pub fn new(random: &mut Random, scaled_size: (f32, f32), position: (i32, i32)) -> Self {
         let mut mesh = Mesh::new((512, 512));
-        mesh.add_cube((position.0 as f32 * 512.0, position.1 as f32 * 512.0), (512.0, 512.0));
+        mesh.add_cube((position.0 as f32 * scaled_size.0 as f32, position.1 as f32 * scaled_size.1),
+                      scaled_size);
         return Chunk {
             position,
             pixels: Box::new([Pixel::new(random.next_u8()); 512 * 512]),

@@ -1,3 +1,4 @@
+use std::borrow::Borrow;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use renderer::display::GameDisplay;
@@ -22,14 +23,16 @@ impl World {
         for x in -size.0..=size.0 {
             for y in -size.1..=size.1 {
                 if !self.chunks.contains_key(&(x, y)) {
-                    self.load_chunk((x, y));
+                    self.load_chunk(display, (x, y));
                 }
             }
         }
     }
 
-    pub fn load_chunk(&mut self, position: (i32, i32)) {
-        self.chunks.insert(position, RefCell::new(Chunk::new(&mut self.random, position)));
+    pub fn load_chunk(&mut self, display: &GameDisplay, position: (i32, i32)) {
+        self.chunks.insert(position, RefCell::new(
+            Chunk::new(&mut self.random,
+                       (512.0 / display.size.0 as f32, 512.0 / display.size.1 as f32), position)));
     }
 
     pub fn get_chunk(&self, position: (i32, i32)) -> &RefCell<Chunk> {

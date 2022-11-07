@@ -23,6 +23,7 @@ impl Mesh {
 
     pub fn add_cube(&mut self, position: (f32, f32), size: (f32, f32)) {
         let offset = self.vertexes.len() as u32;
+        println!("From ({}, {}) at ({}, {})", position.0, position.1, size.0, size.1);
         self.vertexes.push(Vertex::new([position.0, position.1]));
         self.vertexes.push(Vertex::new([position.0 + size.0, position.1]));
         self.vertexes.push(Vertex::new([position.0, position.1 + size.1]));
