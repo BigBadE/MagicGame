@@ -35,10 +35,7 @@ impl World {
                        (512.0 / display.size.0 as f32, 512.0 / display.size.1 as f32), position)));
     }
 
-    pub fn get_chunk(&self, position: (i32, i32)) -> &RefCell<Chunk> {
-        if self.chunks.contains_key(&position) {
-            return &self.chunks.get(&position).expect("Couldn't find chunk!");
-        }
-        panic!("Tried to get unloaded chunk at ({}, {})", position.0, position.1);
+    pub fn get_chunk(&self, position: (i32, i32)) -> Option<&RefCell<Chunk>> {
+        return self.chunks.get(&position);
     }
 }

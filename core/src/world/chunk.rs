@@ -1,3 +1,4 @@
+use std::borrow::BorrowMut;
 use renderer::mesh::{Color, Mesh};
 use crate::util::random::Random;
 use crate::world::pixel::{Pixel, PixelType};
@@ -43,7 +44,11 @@ impl Chunk {
         }
         for position in self.active.as_slice() {
             if position.1 == 0 {
-                let mut chunk = world.get_chunk((self.position.0, self.position.1)).borrow_mut();
+                let chunk = world.get_chunk((self.position.0, self.position.1));
+                if chunk.is_none() {
+                    continue;
+                }
+                let mut chunk = chunk.unwrap().borrow_mut();
                 let temp = chunk.pixels[position.0 * 512 + 511];
                 chunk.internal_set_pixel((position.0 * 512, 511),
                                          self.mesh.get_color(position.0, 0),

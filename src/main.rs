@@ -27,7 +27,7 @@ fn game_loop(game: &mut Game, window: &mut Window) {
     while !window.mouse_input.is_empty() {
         let position = window.cursor;
         let clicking = game.world.get_chunk((position.0 as i32 >> 9, position.1 as i32 >> 9));
-        clicking.borrow_mut().set_pixel_type(
+        clicking.unwrap().borrow_mut().set_pixel_type(
             position.0 as usize % 512, position.1 as usize % 512,
             game.resource_manager.get_type("pixel", "sand"));
         window.mouse_input.remove(0);
