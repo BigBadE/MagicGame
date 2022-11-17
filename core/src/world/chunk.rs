@@ -12,20 +12,21 @@ pub struct Chunk {
 }
 
 impl Chunk {
-    pub fn new(random: &mut Random, scaled_size: (f32, f32), position: (i32, i32)) -> Self {
+    pub fn new(random: &mut Random, scaled_size: (f64, f64), position: (i32, i32)) -> Self {
         let mut chunk = Chunk {
             position,
             pixels: Box::new([Pixel::new(random.next_u8()); 512 * 512]),
             active: Vec::new(),
             mesh: Mesh::new((512, 512)),
         };
-        chunk.resize(scaled_size);
+        chunk.resize((scaled_size.0 as f32, scaled_size.1 as f32));
         return chunk;
     }
 
     pub fn resize(&mut self, scaled_size: (f32, f32)) {
         self.mesh.clear();
-        self.mesh.add_cube((self.position.0 as f32 * scaled_size.0 as f32, self.position.1 as f32 * scaled_size.1),
+        self.mesh.add_cube((self.position.0 as f32 * scaled_size.0,
+                            self.position.1 as f32 * scaled_size.1),
                       scaled_size);
     }
 
@@ -43,12 +44,12 @@ impl Chunk {
 
     pub fn physics_tick(&mut self, world: &World) {
         for x in 0..512 {
-            self.mesh.set_color(x, 2, Color::from((255, 0, 0)));
-            self.mesh.set_color(x, 510, Color::from((0, 0, 255)));
+            self.mesh.set_color(x, 0, Color::from((255, 0, 0)));
+            self.mesh.set_color(x, 511, Color::from((0, 0, 255)));
         }
         for y in 0..512 {
-            self.mesh.set_color(2, y, Color::from((255, 0, 255)));
-            self.mesh.set_color(510, y, Color::from((0, 255, 0)));
+            self.mesh.set_color(0, y, Color::from((255, 0, 255)));
+            self.mesh.set_color(511, y, Color::from((0, 255, 0)));
         }
         for position in self.active.as_slice() {
             if position.1 == 0 {

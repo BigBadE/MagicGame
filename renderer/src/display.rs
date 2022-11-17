@@ -6,7 +6,7 @@ use crate::util::Vertex;
 pub struct GameDisplay {
     display: Display,
     pub size: (u32, u32),
-    pub chunk_size: (f32, f32)
+    pub chunk_size: (f64, f64)
 }
 
 impl GameDisplay {
@@ -20,7 +20,7 @@ impl GameDisplay {
 
     pub fn resize(&mut self, size: (u32, u32)) {
         self.size = size;
-        self.chunk_size = (512.0 / size.0 as f32, 512.0 / size.1 as f32);
+        self.chunk_size = (512.0/* / size.0 as f64*/, 512.0/* / size.1 as f64*/);
     }
 
     pub fn start_frame(&mut self) -> GameFrame {
