@@ -1,8 +1,8 @@
 use glium::{Display, glutin};
-use glium::glutin::event::Event;
+use glium::glutin::event::{ElementState, Event};
 use glium::glutin::event_loop::ControlFlow;
 use crate::display::GameDisplay;
-use crate::input::{KeyInput, MouseInput};
+use crate::input::{KeyInput, MouseButton, MouseInput};
 
 pub struct Window {
     pub display: GameDisplay,
@@ -49,8 +49,9 @@ impl Window {
                             window.key_presses.push(KeyInput::new(input))
                         }
                     }
-                    glutin::event::WindowEvent::MouseInput { button, .. } => {
-                        window.mouse_input.push(MouseInput::new(button))
+                    glutin::event::WindowEvent::MouseInput { button, state, .. } => {
+                        window.mouse_input.push(MouseInput::new(button,
+                                                                state == ElementState::Pressed))
                     }
                     glutin::event::WindowEvent::CursorMoved { position, .. } => {
                         window.cursor = (position.x, position.y);

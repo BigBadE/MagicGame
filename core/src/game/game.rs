@@ -9,7 +9,8 @@ pub struct Game {
     pub world: World,
     pub next_tick: Instant,
     pub resource_manager: ResourceManager,
-    pub shaders: ShaderDatabase
+    pub shaders: ShaderDatabase,
+    pub drawing: bool
 }
 
 impl Game {
@@ -18,7 +19,8 @@ impl Game {
             world: World::new(random),
             next_tick: Instant::now(),
             resource_manager: ResourceManager::new(),
-            shaders: ShaderDatabase::new(&window.display)
+            shaders: ShaderDatabase::new(&window.display),
+            drawing: false
         };
     }
 }

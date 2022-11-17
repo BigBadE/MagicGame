@@ -37,6 +37,7 @@ impl Chunk {
 
     pub fn set_pixel_type(&mut self, x: usize, y: usize, pixel_type: &PixelType) {
         let pixel = &mut self.pixels[x * 512 + y];
+        println!("Set color");
         self.mesh.set_color(512 - x, y, pixel_type.get_color());
         self.active.push((x, y));
         pixel.set_type(&pixel_type);
@@ -51,6 +52,7 @@ impl Chunk {
             self.mesh.set_color(0, y, Color::from((255, 0, 255)));
             self.mesh.set_color(511, y, Color::from((0, 255, 0)));
         }
+        return;
         for position in self.active.as_slice() {
             if position.1 == 0 {
                 let chunk = world.get_chunk((self.position.0, self.position.1));
