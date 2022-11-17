@@ -8,7 +8,8 @@ pub struct Window {
     pub display: GameDisplay,
     pub cursor: (f64, f64),
     pub key_presses: Vec<KeyInput>,
-    pub mouse_input: Vec<MouseInput>
+    pub mouse_input: Vec<MouseInput>,
+    pub resized: bool
 }
 
 impl Window {
@@ -22,8 +23,10 @@ impl Window {
             display: GameDisplay::new(display),
             cursor: (0.0, 0.0),
             key_presses: Vec::new(),
-            mouse_input: Vec::new()
+            mouse_input: Vec::new(),
+            resized: true
         };
+        window.display.resize((300, 300));
 
         let mut context = context(&window);
         let next_frame_time = std::time::Instant::now() +
@@ -38,7 +41,8 @@ impl Window {
                         return;
                     }
                     glutin::event::WindowEvent::Resized(size) => {
-                        window.display.size = (size.width, size.width)
+                        window.display.size = (size.width, size.width);
+                        window.resized = true;
                     }
                     glutin::event::WindowEvent::KeyboardInput { input, is_synthetic, .. } => {
                         if !is_synthetic {
@@ -55,6 +59,7 @@ impl Window {
                 },
                 Event::MainEventsCleared => {
                     callback(&mut context, &mut window);
+                    window.resized = false;
                 }
                 _ => (),
             }

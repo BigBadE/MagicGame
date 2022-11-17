@@ -5,14 +5,14 @@ pub struct Vertex {
 }
 
 impl Vertex {
-    pub fn new(position: [f32; 2]) -> Self {
+    pub fn new_nc(position: [f32; 2]) -> Self {
         return Vertex {
             position,
             tex_coords: [0.0, 0.0]
         }
     }
 
-    pub fn new_coord(position: [f32; 2], tex_coords: [f32; 2]) -> Self {
+    pub fn new(position: [f32; 2], tex_coords: [f32; 2]) -> Self {
         return Vertex {
             position,
             tex_coords

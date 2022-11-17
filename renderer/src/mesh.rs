@@ -23,17 +23,22 @@ impl Mesh {
 
     pub fn add_cube(&mut self, position: (f32, f32), size: (f32, f32)) {
         let offset = self.vertexes.len() as u32;
-        println!("From ({}, {}) at ({}, {})", position.0, position.1, size.0, size.1);
-        self.vertexes.push(Vertex::new([position.0, position.1]));
-        self.vertexes.push(Vertex::new([position.0 + size.0, position.1]));
-        self.vertexes.push(Vertex::new([position.0, position.1 + size.1]));
-        self.vertexes.push(Vertex::new([position.0 + size.0, position.1 + size.1]));
+        println!("From ({}, {}) size ({}, {})", position.0, position.1, size.0, size.1);
+        self.vertexes.push(Vertex::new([position.0, position.1], [0.0, 0.0]));
+        self.vertexes.push(Vertex::new([position.0 + size.0, position.1], [1.0, 0.0]));
+        self.vertexes.push(Vertex::new([position.0, position.1 + size.1], [0.0, 1.0]));
+        self.vertexes.push(Vertex::new([position.0 + size.0, position.1 + size.1], [1.0, 1.0]));
         self.indices.push(offset + 0);
         self.indices.push(offset + 1);
         self.indices.push(offset + 2);
         self.indices.push(offset + 2);
         self.indices.push(offset + 1);
         self.indices.push(offset + 3);
+    }
+
+    pub fn clear(&mut self) {
+        self.vertexes.clear();
+        self.indices.clear();
     }
 
     pub fn draw(&mut self, display: &GameDisplay, frame: &mut GameFrame, shader: &Shader) {

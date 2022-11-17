@@ -1,4 +1,3 @@
-use std::borrow::Borrow;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use renderer::display::GameDisplay;
@@ -31,8 +30,8 @@ impl World {
 
     pub fn load_chunk(&mut self, display: &GameDisplay, position: (i32, i32)) {
         self.chunks.insert(position, RefCell::new(
-            Chunk::new(&mut self.random,
-                       (512.0 / display.size.0 as f32, 512.0 / display.size.1 as f32), position)));
+            Chunk::new(&mut self.random, display.chunk_size, position)));
+
     }
 
     pub fn get_chunk(&self, position: (i32, i32)) -> Option<&RefCell<Chunk>> {

@@ -1,5 +1,5 @@
-use std::borrow::BorrowMut;
 use renderer::mesh::{Color, Mesh};
+
 use crate::util::random::Random;
 use crate::world::pixel::{Pixel, PixelType};
 use crate::world::world::World;
@@ -13,15 +13,20 @@ pub struct Chunk {
 
 impl Chunk {
     pub fn new(random: &mut Random, scaled_size: (f32, f32), position: (i32, i32)) -> Self {
-        let mut mesh = Mesh::new((512, 512));
-        mesh.add_cube((position.0 as f32 * scaled_size.0 as f32, position.1 as f32 * scaled_size.1),
-                      scaled_size);
-        return Chunk {
+        let mut chunk = Chunk {
             position,
             pixels: Box::new([Pixel::new(random.next_u8()); 512 * 512]),
             active: Vec::new(),
-            mesh,
+            mesh: Mesh::new((512, 512)),
         };
+        chunk.resize(scaled_size);
+        return chunk;
+    }
+
+    pub fn resize(&mut self, scaled_size: (f32, f32)) {
+        self.mesh.clear();
+        self.mesh.add_cube((self.position.0 as f32 * scaled_size.0 as f32, self.position.1 as f32 * scaled_size.1),
+                      scaled_size);
     }
 
     fn internal_set_pixel(&mut self, position: (usize, usize), color: Color, pixel: Pixel) {
@@ -37,10 +42,13 @@ impl Chunk {
     }
 
     pub fn physics_tick(&mut self, world: &World) {
-        for x in 0..2 {
-            for y in 0..2 {
-                self.mesh.set_color(x, y, Color::from((255, 0, 0)));
-            }
+        for x in 0..512 {
+            self.mesh.set_color(x, 2, Color::from((255, 0, 0)));
+            self.mesh.set_color(x, 510, Color::from((0, 0, 255)));
+        }
+        for y in 0..512 {
+            self.mesh.set_color(2, y, Color::from((255, 0, 255)));
+            self.mesh.set_color(510, y, Color::from((0, 255, 0)));
         }
         for position in self.active.as_slice() {
             if position.1 == 0 {
@@ -60,9 +68,9 @@ impl Chunk {
                     self.pixels.swap(position.0 * 512 + position.1 - 1,
                                      position.0 * 512 + position.1);
                     let color = self.mesh.get_color(position.0, position.1);
-                    self.mesh.set_color((512 - position.0), position.1 - 1,
+                    self.mesh.set_color(512 - position.0, position.1 - 1,
                                         color);
-                    self.mesh.set_color((512 - position.0), position.1, Color::from((100, 100, 100)))
+                    self.mesh.set_color(512 - position.0, position.1, Color::from((100, 100, 100)))
                 }
             }
         }
