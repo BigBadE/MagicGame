@@ -51,6 +51,7 @@ impl Chunk {
             self.mesh.set_color(0, y, Color::from((255, 0, 255)));
             self.mesh.set_color(511, y, Color::from((0, 255, 0)));
         }
+        
         return;
         for position in self.active.as_slice() {
             if position.1 == 0 {

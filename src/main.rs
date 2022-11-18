@@ -1,4 +1,5 @@
 use std::borrow::Borrow;
+use std::path::Iter;
 use renderer::window::Window;
 use core::game::game::Game;
 use core::physics::physics::Physics;
@@ -8,34 +9,22 @@ fn main() {
     Window::start(setup, game_loop);
 }
 
-fn setup(window: &Window) -> Game {
+fn setup(window: Window) -> Game {
     let random = Random::new(1);
     return Game::new(random, window);
 }
 
-fn game_loop(game: &mut Game, window: &mut Window) {
+fn game_loop(game: &mut Game) {
+    Physics::physics_tick(game);
+
+    let window = &mut game.window;
     let mut frame = window.display.start_frame();
     frame.clear();
-
-    Physics::physics_tick(game);
 
     game.world.update(&window.display);
 
     for chunk in game.world.chunks.values() {
-        if window.resized {
-            chunk.borrow_mut().resize((window.display.chunk_size.0 as f32, window.display.chunk_size.1 as f32));
-        }
-
         chunk.borrow_mut().mesh.draw(&window.display, &mut frame, &game.shaders.get_shader("standard"));
-    }
-
-    while !window.mouse_input.is_empty() {
-        if window.mouse_input.get(0).unwrap().pressed {
-            game.drawing = true;
-        } else {
-            game.drawing = false;
-        }
-        window.mouse_input.remove(0);
     }
 
     if game.drawing {
