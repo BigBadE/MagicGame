@@ -1,5 +1,3 @@
-use std::borrow::Borrow;
-use std::path::Iter;
 use renderer::window::Window;
 use core::game::game::Game;
 use core::physics::physics::Physics;
@@ -21,7 +19,7 @@ fn game_loop(game: &mut Game) {
     let mut frame = window.display.start_frame();
     frame.clear();
 
-    game.world.update(&window.display);
+    game.world.update(&window.display, &game.resource_manager);
 
     for chunk in game.world.chunks.values() {
         chunk.borrow_mut().mesh.draw(&window.display, &mut frame, &game.shaders.get_shader("standard"));
@@ -45,7 +43,7 @@ fn game_loop(game: &mut Game) {
 
         clicking.unwrap().borrow_mut().set_pixel_type(
             sand_pos.0 as usize, sand_pos.1 as usize,
-            game.resource_manager.get_type("pixel", "sand"));
+            game.resource_manager.get_type("pixel", "sand"), true);
     }
 
     frame.end_frame();

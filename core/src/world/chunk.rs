@@ -1,4 +1,5 @@
 use renderer::mesh::{Color, Mesh};
+use crate::game::game::Game;
 
 use crate::util::random::Random;
 use crate::world::pixel::{Pixel, PixelType};
@@ -25,9 +26,37 @@ impl Chunk {
 
     pub fn resize(&mut self, scaled_size: (f32, f32)) {
         self.mesh.clear();
-        println!("Chunk at ({}, {})", self.position.0 as f32 * scaled_size.0, self.position.1 as f32 * scaled_size.1);
         self.mesh.add_cube((self.position.0 as f32 * scaled_size.0,
                             self.position.1 as f32 * scaled_size.1), scaled_size);
+    }
+
+    pub fn get_relative(&mut self, world: &World, mut x: i32, mut y: i32) -> Option<Pixel> {
+        let mut target = self.position;
+        while x < 0 {
+            target = (target.0-1, target.1);
+            x += 512;
+        }
+        while x > 511 {
+            target = (target.0+1, target.1);
+            x -= 512;
+        }
+        while y < 0 {
+            target = (target.0, target.1-1);
+            y += 512;
+        }
+        while y > 511 {
+            target = (target.0+1, target.1+1);
+            y -= 512;
+        }
+
+        return if target == self.position {
+            Some(self.pixels[(x * 512 + y) as usize])
+        } else {
+            match world.get_chunk(target) {
+                Some(value) => Some(value.borrow().pixels[(x * 512 + y) as usize]),
+                None => None
+            }
+        }
     }
 
     fn internal_set_pixel(&mut self, position: (usize, usize), color: Color, pixel: Pixel) {
@@ -35,11 +64,18 @@ impl Chunk {
         self.mesh.set_color(position.0, position.1, color);
     }
 
-    pub fn set_pixel_type(&mut self, x: usize, y: usize, pixel_type: &PixelType) {
+    pub fn set_pixel_type(&mut self, x: usize, y: usize, pixel_type: &PixelType, active: bool) {
         let pixel = &mut self.pixels[x * 512 + y];
         self.mesh.set_color(x, y, pixel_type.get_color());
-        self.active.push((x, y));
+        if active {
+            self.active.push((x, y));
+        }
         pixel.set_type(&pixel_type);
+    }
+
+    pub fn empty(&mut self, x: usize, y: usize) {
+        self.mesh.set_color(x, y, Color::default());
+        self.pixels[x * 512 + y] = Pixel::new(0);
     }
 
     pub fn physics_tick(&mut self, world: &World) {
@@ -51,7 +87,7 @@ impl Chunk {
             self.mesh.set_color(0, y, Color::from((255, 0, 255)));
             self.mesh.set_color(511, y, Color::from((0, 255, 0)));
         }
-        
+
         return;
         for position in self.active.as_slice() {
             if position.1 == 0 {

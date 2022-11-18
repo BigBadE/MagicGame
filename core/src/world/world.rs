@@ -1,6 +1,7 @@
 use std::cell::RefCell;
 use std::collections::HashMap;
 use renderer::display::GameDisplay;
+use crate::resources::resources::ResourceManager;
 use crate::util::random::Random;
 use crate::world::chunk::Chunk;
 use crate::world::generation::generator::Generator;
@@ -20,20 +21,23 @@ impl World {
         };
     }
 
-    pub fn update(&mut self, display: &GameDisplay) {
-        let size = ((display.size.0 / 512 + 1) as i32, (display.size.1 / 512 + 1) as i32);
+    pub fn update(&mut self, display: &GameDisplay, resource_manager: &ResourceManager) {
+        let size = display.size;
+        let size = ((size.0 / 512 + 1) as i32, (size.1 / 512 + 1) as i32);
         for x in -size.0..=size.0 {
             for y in -size.1..=size.1 {
                 if !self.chunks.contains_key(&(x, y)) {
-                    self.load_chunk(display, (x, y));
+                    let random = self.random.push();
+                    self.load_chunk(random, resource_manager,
+                                          display.chunk_size, (x, y));
                 }
             }
         }
     }
 
-    pub fn load_chunk(&mut self, display: &GameDisplay, position: (i32, i32)) {
-        let chunk = Chunk::new(&mut self.random, display.chunk_size, position);
-        self.generator.generate(&chunk);
+    pub fn load_chunk(&mut self, random: Random, resource_manager: &ResourceManager, chunk_size: (f64, f64), position: (i32, i32)) {
+        let mut chunk = Chunk::new(&mut self.random, chunk_size, position);
+        Generator::generate(random, resource_manager, self, &mut chunk);
         self.chunks.insert(position, RefCell::new(chunk));
     }
 

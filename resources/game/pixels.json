@@ -1,9 +1,29 @@
-{
-  "type": "pixel",
-  "name": "sand",
-  "color": {
-    "r": 255,
-    "g": 255,
-    "b": 255
+[
+  {
+    "type": "pixel",
+    "name": "sand",
+    "color": {
+      "r": 255,
+      "g": 255,
+      "b": 255
+    }
+  },
+  {
+    "type": "pixel",
+    "name": "stone",
+    "color": {
+      "r": 153,
+      "g": 153,
+      "b": 153
+    }
+  },
+  {
+    "type": "pixel",
+    "name": "dirt",
+    "color": {
+      "r": 153,
+      "g": 102,
+      "b": 51
+    }
   }
-}
+]

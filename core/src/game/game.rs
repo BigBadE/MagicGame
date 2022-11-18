@@ -27,6 +27,10 @@ impl Game {
             drawing: false
         };
     }
+
+    pub fn update(&mut self) {
+
+    }
 }
 
 impl Context for Game {
