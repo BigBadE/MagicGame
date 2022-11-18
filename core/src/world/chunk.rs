@@ -25,9 +25,9 @@ impl Chunk {
 
     pub fn resize(&mut self, scaled_size: (f32, f32)) {
         self.mesh.clear();
+        println!("Chunk at ({}, {})", self.position.0 as f32 * scaled_size.0, self.position.1 as f32 * scaled_size.1);
         self.mesh.add_cube((self.position.0 as f32 * scaled_size.0,
-                            self.position.1 as f32 * scaled_size.1),
-                      scaled_size);
+                            self.position.1 as f32 * scaled_size.1), scaled_size);
     }
 
     fn internal_set_pixel(&mut self, position: (usize, usize), color: Color, pixel: Pixel) {
@@ -37,8 +37,7 @@ impl Chunk {
 
     pub fn set_pixel_type(&mut self, x: usize, y: usize, pixel_type: &PixelType) {
         let pixel = &mut self.pixels[x * 512 + y];
-        println!("Set color");
-        self.mesh.set_color(512 - x, y, pixel_type.get_color());
+        self.mesh.set_color(x, y, pixel_type.get_color());
         self.active.push((x, y));
         pixel.set_type(&pixel_type);
     }

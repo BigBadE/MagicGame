@@ -23,7 +23,6 @@ impl Mesh {
 
     pub fn add_cube(&mut self, position: (f32, f32), size: (f32, f32)) {
         let offset = self.vertexes.len() as u32;
-        println!("From ({}, {}) size ({}, {})", position.0, position.1, size.0, size.1);
         self.vertexes.push(Vertex::new([position.0, position.1], [0.0, 0.0]));
         self.vertexes.push(Vertex::new([position.0 + size.0, position.1], [1.0, 0.0]));
         self.vertexes.push(Vertex::new([position.0, position.1 + size.1], [0.0, 1.0]));
@@ -48,7 +47,7 @@ impl Mesh {
     }
 
     pub fn set_color(&mut self, x: usize, y: usize, color: Color) {
-        let start = x * 3 * self.tex_size.0 as usize + (y * 3);
+        let start = y * 3 * self.tex_size.0 as usize + (x * 3);
         self.texture[start] = color.r;
         self.texture[start + 1] = color.g;
         self.texture[start + 2] = color.b;

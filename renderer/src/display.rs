@@ -19,8 +19,9 @@ impl GameDisplay {
     }
 
     pub fn resize(&mut self, size: (u32, u32)) {
+        println!("Resize to ({}, {})", size.0, size.1);
         self.size = size;
-        self.chunk_size = (512.0 / size.0 as f64 * 0.5, 512.0 / size.1 as f64 * 0.5);
+        self.chunk_size = (512.0 / size.0 as f64, 512.0 / size.1 as f64);
     }
 
     pub fn start_frame(&mut self) -> GameFrame {

@@ -26,7 +26,6 @@ impl Window {
             mouse_input: Vec::new(),
             resized: true
         };
-        window.display.resize((300, 300));
 
         let mut context = context(&window);
         let next_frame_time = std::time::Instant::now() +
@@ -41,7 +40,7 @@ impl Window {
                         return;
                     }
                     glutin::event::WindowEvent::Resized(size) => {
-                        window.display.size = (size.width, size.width);
+                        window.display.resize((size.width, size.height));
                         window.resized = true;
                     }
                     glutin::event::WindowEvent::KeyboardInput { input, is_synthetic, .. } => {
